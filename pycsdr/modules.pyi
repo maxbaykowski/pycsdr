@@ -262,3 +262,7 @@ class ExecModule(Module):
     # if SIGHUP is not available, you can perform a hard restart.
     def restart(self) -> None:
         ...
+
+class Throttle(Module):
+    def __init__(self, format: Format, rate: int, chunkSize: int = 8096):
+        ...

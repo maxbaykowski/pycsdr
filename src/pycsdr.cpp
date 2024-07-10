@@ -38,6 +38,7 @@
 #include "baudot.hpp"
 #include "lowpass.hpp"
 #include "exec.hpp"
+#include "throttle.hpp"
 
 #include <csdr/version.hpp>
 
@@ -289,6 +290,12 @@ PyInit_modules(void) {
     PyObject* ExecModuleType = PyType_FromSpecWithBases(&ExecModuleSpec, bases);
     if (ExecModuleType == NULL) return NULL;
 
+    Py_INCREF(ModuleType);
+    bases = PyTuple_Pack(1, ModuleType);
+    if (bases == NULL) return NULL;
+    PyObject* ThrottleType = PyType_FromSpecWithBases(&ThrottleSpec, bases);
+    if (ThrottleType == NULL) return NULL;
+
     PyObject *m = PyModule_Create(&pycsdrmodule);
     if (m == NULL) {
         return NULL;
@@ -371,6 +378,8 @@ PyInit_modules(void) {
     PyModule_AddObject(m, "Lowpass", LowpassType);
 
     PyModule_AddObject(m, "ExecModule", ExecModuleType);
+
+    PyModule_AddObject(m, "Throttle", ThrottleType);
 
     PyObject* csdrVersion = PyUnicode_FromStringAndSize(Csdr::version.c_str(), Csdr::version.length());
     if (csdrVersion == NULL) return NULL;
