@@ -7,7 +7,7 @@ static int Throttle_init(Throttle* self, PyObject* args, PyObject* kwds) {
     static char* kwlist[] = {(char*) "format", (char*) "rate", (char*) "chunkSize", NULL};
 
     size_t rate = 0;
-    size_t chunkSize = 8096;
+    size_t chunkSize = 8192;
     PyObject* format;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!n|n", kwlist, FORMAT_TYPE, &format, &rate, &chunkSize)) {
