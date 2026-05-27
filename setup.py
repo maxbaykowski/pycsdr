@@ -1,9 +1,36 @@
 #!/usr/bin/env python3
 # -*- coding: UTF-8 -*-
+import subprocess
+
 from setuptools import setup, Extension
 
 
 version = "0.19.0-dev"
+
+
+def pkg_config(package, option):
+    try:
+        output = subprocess.check_output(
+            ["pkg-config", option, package],
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return []
+    return output.split()
+
+
+def pkg_config_extension_args(package):
+    pkg_compile_args = pkg_config(package, "--cflags")
+    link_args = pkg_config(package, "--libs")
+    if not pkg_compile_args and not link_args:
+        return {
+            "extra_compile_args": ["-std=c++11"],
+            "libraries": ["csdr", "fftw3f"],
+        }
+    return {
+        "extra_compile_args": ["-std=c++11"] + pkg_compile_args,
+        "extra_link_args": link_args,
+    }
 
 setup(
     name="pycsdr",
@@ -74,8 +101,8 @@ setup(
             ],
             language="c++",
             include_dirs=["src"],
-            libraries=['csdr', 'fftw3f'],
             define_macros=[("VERSION", '"{}"'.format(version))],
+            **pkg_config_extension_args("csdr"),
         )
     ],
 )

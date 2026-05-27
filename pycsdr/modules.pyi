@@ -189,7 +189,7 @@ class AmDemod(Module):
 
 
 class DcBlock(Module):
-    def __init__(self):
+    def __init__(self, sampleRate: float = 48000.0, cutoff: float = 15.0, fadeTime: float = 0.05):
         ...
 
 

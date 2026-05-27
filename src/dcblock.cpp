@@ -4,7 +4,21 @@
 #include <csdr/dcblock.hpp>
 
 static int DcBlock_init(DcBlock* self, PyObject* args, PyObject* kwds) {
-    self->setModule(new Csdr::DcBlock());
+    static char* kwlist[] = {
+        (char*) "sampleRate",
+        (char*) "cutoff",
+        (char*) "fadeTime",
+        NULL
+    };
+    float sampleRate = 48000.0f;
+    float cutoff = 15.0f;
+    float fadeTime = 0.05f;
+
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "|fff", kwlist, &sampleRate, &cutoff, &fadeTime)) {
+        return -1;
+    }
+
+    self->setModule(new Csdr::DcBlock(sampleRate, cutoff, fadeTime));
 
     self->inputFormat = FORMAT_FLOAT;
     self->outputFormat = FORMAT_FLOAT;
